@@ -140,7 +140,6 @@ class RunViewer(object):
         self.ui.disable_selected_shots.clicked.connect(self._disable_selected_shots)
         self.ui.add_shot.clicked.connect(self.on_add_shot)
         
-        
         self.ui.show()
         
         # internal variables
@@ -154,12 +153,9 @@ class RunViewer(object):
         self._thread.daemon = True
         self._thread.start()
         
-        # self.temp_load_shots()
-        shot = Shot(r'C:\Users\Phil\Documents\Programming\labscript_suite\labscript\example.h5')
-        self.load_shot(shot)
-    
+
     def on_add_shot(self):
-        dialog = QFileDialog(self.ui,"Select file to load", r'C:\Users\Phil\Documents\Programming\labscript_suite\labscript', "HDF5 files (*.h5 *.hdf5)")
+        dialog = QFileDialog(self.ui,"Select file to load", QDir.homePath(), "HDF5 files (*.h5 *.hdf5)")
         dialog.setViewMode(QFileDialog.Detail)
         dialog.setFileMode(QFileDialog.ExistingFile)
         if dialog.exec_():
@@ -799,7 +795,10 @@ class Shot(object):
                 child_device = self.connection_table.find_by_name(name)
                 for grandchild_device_name, grandchild_device in child_device.child_list.items():
                     self._load_device(grandchild_device, trace)
-            
+        except ImportError:
+            pass
+                
+            """
         except Exception:
             #TODO: print/log exception traceback
             # if device.name == 'ni_card_0' or device.name == 'pulseblaster_0' or device.name == 'pineblaster_0' or device.name == 'ni_card_1' or device.name == 'novatechdds9m_0':
@@ -809,6 +808,7 @@ class Shot(object):
                 print 'Failed to load device %s'%device.name
             else:
                 print 'Failed to load device (unknown name, device object does not have attribute name)'
+                """
     
     @property
     def channels(self):
